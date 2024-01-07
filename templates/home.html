@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+{% if brandName %}
+{{ brandName }}
+{% else %}
+Car Cottage
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div>
+        {% if messages %}
+        {% for m in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ m }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="d-flex  justify-content-between flex-wrap pt-3 align-items-center mb-3">
+        <div>
+            <img src="{% static 'images.jpg' %}" style="width: 80vh;" alt="">
+        </div>
+        <div>
+            <h1 class="h2 text-center">Welcome to Car Cottage</h1>
+            <p style="text-align: center;"> In Our website we have thousands of cars for you to explore. <br>
+                You can choose a car according to your needs. there are many brands available. <br> Choose one of them.
+                <br>
+            </p>
+        </div>
+
+    </div>
+</div>
+
+<div class="container">
+    <div class="d-flex m-3 gap-5 justify-content-center">
+        <a class="btn btn-primary text-decoration-none" href="{% url 'home' %}">All Brands</a>
+        {% for brand in brands %}
+        <a class="btn btn-primary text-decoration-none" href="{% url 'brands_filter' brand.name %}">{{ brand.name }}</a>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            {% if cars.exists %}
+            {% if cars|length > 1 %}
+            <h2 class="text-left m-3">Total Cars Found :{{ cars|length }}</h2>
+            {% else %}
+            <h2 class="text-left m-3">Total Car Found :{{ cars|length }}</h2>
+            {% endif %}
+            {% else %}
+            <h2 class="text-left m-3">No Cars Found</h2>
+            {% endif %}
+
+            <div class="row ">
+                {% for c in cars %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        {% if c.image %}
+                        <img src="{{ c.image.url }}" class="card-img-top" alt="{{ c.name }}">
+                        {% else %}
+                        <img src="{% static 'placeholder.jpg' %}" class="card-img-top" alt="No Image Available">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title"><a class="text-decoration-none" href="{% url 'car_detail' c.id %}">{{ c.name }}</a></h5>
+                            <p class="card-text">{{ c.description|truncatewords:20 }}</p>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Price: ${{ c.price }}</li>
+                            <li class="list-group-item">Brand: {{ c.brand.name }}</li>
+                        </ul>
+                        <div class="card-body">
+                            <a href="{% url 'car_detail' c.id %}" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

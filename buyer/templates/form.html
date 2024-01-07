@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+
+<form style="width: 50%; margin: auto;" action="" method="POST" novalidate>
+    {% if button_text == "Change Password" and title == "Change Your Password" %}
+    <h1 class="text-center">Change Your Password</h1>
+    {% elif button_text == "Change Password" and title == "Change Your Password without Old Password" %}
+    <h3 class="text-center">Change Your Password without Old Password</h3>
+    {% else %}
+    <h1 class="text-center">{{title}} Page</h1>
+    {% endif %}
+
+    <div>
+        {% if messages %}
+                {% for m in messages %}
+                    <div class="alert alert-danger" role="alert">
+                        {{m}}
+                    </div>
+                {% endfor %}
+            {% endif %}
+    </div>
+
+    {% csrf_token %}
+
+    {% for f in form %}
+    <div class="form-group">
+        {{f.label_tag}}
+        {{f}}
+        {{f.errors|striptags}}
+    </div>
+    {% endfor %}
+
+    <br>
+    <button type="submit" class="btn btn-primary mt-2">{{title}}</button>
+
+</form>
+
+{% endblock %}
